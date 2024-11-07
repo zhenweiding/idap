@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     <title>AI简单 - TextAny 智能文档处理</title>
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <style>
         * {
             margin: 0;
@@ -571,9 +573,20 @@
             display: inline-block;
             transition: transform 0.2s ease;
         }
-    
+
         .feature-card-content a:hover {
             transform: translateX(5px);
+        }
+
+        .swiper-container {
+            width: 100%;
+            height: 660px;
+        }
+
+        .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     </style>
 </head>
@@ -604,7 +617,22 @@
         <div class="feature-grid">
             <div class="feature-card">
                 <div class="feature-card-image">
-                    <img src="Screenshot_1.jpeg" alt="通用文档抽取" width="100%" height="auto">
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="Screenshot_1.jpeg" alt="文档信息提取" width="100%" height="auto">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="screenshot.png" alt="文档信息提取" width="100%" height="auto">
+                            </div>
+                            <!-- 添加更多图片 -->
+                        </div>
+                        <!-- 如果需要分页器 -->
+                        <div class="swiper-pagination"></div>
+                        <!-- 如果需要导航按钮 -->
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                    </div>
                 </div>
                 <div class="feature-card-content">
                     <h3>文档信息提取</h3>
@@ -615,7 +643,22 @@
 
             <div class="feature-card">
                 <div class="feature-card-image">
-                    <img src="Screenshot_2.jpeg" alt="文档审核" width="100%" height="auto">
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="Screenshot_2.jpeg" alt="文档内容审核" width="100%" height="auto">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="screenshot.png" alt="文档内容审核" width="100%" height="auto">
+                            </div>
+                            <!-- 添加更多图片 -->
+                        </div>
+                        <!-- 如果需要分页器 -->
+                        <div class="swiper-pagination"></div>
+                        <!-- 如果需要导航按钮 -->
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                    </div>
                 </div>
                 <div class="feature-card-content">
                     <h3>文档内容审核</h3>
@@ -628,7 +671,22 @@
         <div class="feature-grid">
             <div class="feature-card">
                 <div class="feature-card-image">
-                    <img src="Screenshot_3.jpeg" alt="图片识别" width="100%" height="auto">
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="Screenshot_3.jpeg" alt="图片文字识别" width="100%" height="auto">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="screenshot.png" alt="图片文字识别" width="100%" height="auto">
+                            </div>
+                            <!-- 添加更多图片 -->
+                        </div>
+                        <!-- 如果需要分页器 -->
+                        <div class="swiper-pagination"></div>
+                        <!-- 如果需要导航按钮 -->
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                    </div>
                 </div>
                 <div class="feature-card-content">
                     <h3>图片文字识别</h3>
@@ -639,7 +697,22 @@
 
             <div class="feature-card">
                 <div class="feature-card-image">
-                    <img src="Screenshot_4.jpeg" alt="表格识别" width="100%" height="auto">
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <img src="Screenshot_4.jpeg" alt="表格内容提取" width="100%" height="auto">
+                            </div>
+                            <div class="swiper-slide">
+                                <img src="screenshot.png" alt="表格内容提取" width="100%" height="auto">
+                            </div>
+                            <!-- 添加更多图片 -->
+                        </div>
+                        <!-- 如果需要分页器 -->
+                        <div class="swiper-pagination"></div>
+                        <!-- 如果需要导航按钮 -->
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                    </div>
                 </div>
                 <div class="feature-card-content">
                     <h3>表格内容提取</h3>
@@ -756,6 +829,8 @@
         </div>
     </footer>
 
+    <!-- Swiper JS -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // 滚动效果
@@ -793,6 +868,18 @@
             setupGridAnimation('.feature-grid');
             setupGridAnimation('.advantage-grid');
             setupGridAnimation('.engine-grid');
+        });
+
+        // 初始化 Swiper
+        var swiper = new Swiper('.swiper-container', {
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
         });
     </script>
 </body>
