@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 智能招聘平台规划书 (交互式)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Calm Professional (Warm neutral bg-gray-50, white cards, text-gray-800, indigo-600 accent) -->
+    <!-- Application Structure Plan: A tab-based SPA structure was chosen. The original report's linear flow is replaced by four thematic, user-selectable tabs: '概览与战略' (Business/Strategy), '产品设计' (Features), '技术架构' (Tech), and '实施蓝图' (Roadmap). This non-linear design allows different user personas (e.g., investor, engineer) to instantly access the information they need, dramatically improving usability and comprehension. Navigation is handled by JS-powered tab switching. -->
+    <!-- Visualization & Content Choices:
+        - Report Info: GTM Strategy & Roadmap Table (Section 2.4, 5)
+        - Goal: Visualize the project timeline and key phases.
+        - Viz/Presentation Method: Horizontal Bar Chart (used as a Gantt chart).
+        - Interaction: Hover tooltips on the chart bars show the exact month range.
+        - Justification: A Gantt-style chart is the most intuitive way to represent a project timeline with start/end points, superior to a simple table or text.
+        - Library/Method: Chart.js (Canvas).
+        - Report Info: Tech Architecture (Section 4.2)
+        - Goal: Explain the system components without complex diagrams.
+        - Viz/Presentation Method: A diagram built purely from HTML (divs) and Tailwind (flexbox/grid) to represent component groupings (Frontend, Backend, Data).
+        - Interaction: None (static diagram).
+        - Justification: Adheres to the NO SVG/Mermaid constraint while still providing a clear visual representation of the system architecture.
+        - Report Info: Data Flow (Section 4.3)
+        - Goal: Show a sequence of events.
+        - Viz/Presentation Method: A styled, numbered list (<ol>) where each step is a card.
+        - Interaction: None.
+        - Justification: Clearly represents a process flow in a clean, accessible, and compliant manner.
+        -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+        .tab-active {
+            background-color: #4f46e5;
+            color: white;
+        }
+        .tab-inactive {
+            color: #4b5563;
+            background-color: #f3f4f6;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+        .tab-inactive:hover {
+            background-color: #e5e7eb;
+            color: #1f2937;
+        }
+        .section-content {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .diagram-box {
+            border: 1px solid #d1d5db;
+            background-color: #ffffff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        .diagram-title {
+            font-weight: 600;
+            color: #4f46e5;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">AI 智能招聘平台 (IntelliMatch)</h1>
+            <p class="mt-2 text-lg text-indigo-600">交互式商业与技术规划书</p>
+        </header>
+
+        <nav class="flex flex-wrap justify-center gap-2 md:gap-4 mb-8" aria-label="Main navigation">
+            <button data-tab="overview" class="tab-active py-2 px-4 rounded-lg text-sm md:text-base font-medium cursor-pointer shadow-sm">
+                概览与战略
+            </button>
+            <button data-tab="product" class="tab-inactive py-2 px-4 rounded-lg text-sm md:text-base font-medium cursor-pointer shadow-sm">
+                产品设计
+            </button>
+            <button data-tab="tech" class="tab-inactive py-2 px-4 rounded-lg text-sm md:text-base font-medium cursor-pointer shadow-sm">
+                技术架构
+            </button>
+            <button data-tab="roadmap" class="tab-inactive py-2 px-4 rounded-lg text-sm md:text-base font-medium cursor-pointer shadow-sm">
+                实施蓝图
+            </button>
+        </nav>
+
+        <main>
+            <div id="overview-content" class="section-content">
+                <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">
+                    本部分深入探讨项目的核心愿景、商业模式和市场进入策略。我们将定义我们的使命、对B端和C端的独特价值主张，以及我们如何解决市场冷启动的“鸡生蛋”问题。
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-lg font-semibold text-indigo-700 mb-2">项目使命</h3>
+                        <p class="text-gray-600">利用LLM技术，打破传统“关键词搜索”的壁垒，真正“理解”人才与岗位的深层匹配度，提供精准、高效、可解释的匹配体验。</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-lg font-semibold text-indigo-700 mb-2">核心价值主张</h3>
+                        <p class="text-gray-600"><strong>对B端:</strong> “告别简历筛选，直达精准面试。”</p>
+                        <p class="text-gray-600"><strong>对C端:</strong> “告别盲目海投，直达优质机会。”</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg">
+                        <h3 class="text-lg font-semibold text-indigo-700 mb-2">核心竞争力</h3>
+                        <p class="text-gray-600">基于LLM的“简历-JD双向语义理解与精排引擎”，不仅解析事实，更理解意图、经验“含金量”和发展可能性。</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center">商业模式与市场战略</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">市场定位与用户</h3>
+                            <ul class="space-y-2 text-gray-600">
+                                <li><strong>定位:</strong> AI驱动的双边招聘平台。</li>
+                                <li><strong>C端用户 (人才库):</strong> 早期以技术、产品、运营岗为切入点。</li>
+                                <li><strong>B端用户 (付费方):</strong> 早期为高成长性中小型科技企业。</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-3">GTM 市场进入战略</h3>
+                            <ol class="list-decimal list-inside space-y-2 text-gray-600">
+                                <li><strong>阶段一 (C端冷启动):</strong> 用爬虫聚合JD作诱饵，吸引C端用户上传简历，目标 10,000+ 人才数据。</li>
+                                <li><strong>阶段二 (B端验证):</strong> 凭借人才库，邀请HR免费试用，体验“岗找人”价值。</li>
+                                <li><strong>阶段三 (商业化):</strong> 启动B端付费订阅，形成B-C双边正向循环。</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-semibold text-gray-800 mt-6 mb-3 text-center">盈利模式 (B端为核心)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="border border-gray-200 p-4 rounded-lg bg-gray-50">
+                            <h4 class="font-semibold text-indigo-600">1. SaaS 订阅</h4>
+                            <p class="text-sm text-gray-600">基础版、专业版、企业版。提供不同级别的职位发布和人才搜索权限。</p>
+                        </div>
+                        <div class="border border-gray-200 p-4 rounded-lg bg-gray-50">
+                            <h4 class="font-semibold text-indigo-600">2. 按效果付费</h4>
+                            <p class="text-sm text-gray-600">B端在订阅基础上，按“解锁”候选人联系方式额外付费。</p>
+                        </div>
+                        <div class="border border-gray-200 p-4 rounded-lg bg-gray-50">
+                            <h4 class="font-semibold text-indigo-600">3. 增值服务</h4>
+                            <p class="text-sm text-gray-600">C端简历优化、模拟面试；B端薪酬分析、市场洞察报告。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="product-content" class="section-content hidden">
+                <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">
+                    本部分详细拆解平台为两类核心用户——求职者（C端）和企业HR（B端）所设计的功能。重点展示双方的“杀手锏”功能，即由LLM驱动的可解释性推荐。
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-indigo-500">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">C 端 (求职者门户)</h2>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <span class="text-indigo-500 mr-3 mt-1">📄</span>
+                                <div>
+                                    <h3 class="font-semibold">简历智能解析</h3>
+                                    <p class="text-gray-600 text-sm">支持多格式上传，LLM自动生成结构化的、可在线编辑的个人档案。</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-indigo-500 mr-3 mt-1">🎯</span>
+                                <div>
+                                    <h3 class="font-semibold">“人找岗” - 智能推荐</h3>
+                                    <p class="text-gray-600 text-sm">基于个人档案，自动匹配全站JD。</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-indigo-500 mr-3 mt-1">✨</span>
+                                <div>
+                                    <h3 class="font-semibold">[杀手锏] 可解释性推荐</h3>
+                                    <p class="text-gray-600 text-sm bg-indigo-50 p-3 rounded-md">"为您推荐 XX 岗位 (95%)。<br><strong>理由：</strong>您的'高并发支付网关'项目经验与 JD 中的'核心交易系统'职责高度重叠..."</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-indigo-500 mr-3 mt-1">🔔</span>
+                                <div>
+                                    <h3 class="font-semibold">个人状态管理</h3>
+                                    <p class="text-gray-600 text-sm">管理求职意向（如“积极找工作”、“观望机会”）。</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-blue-500">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">B 端 (企业 HR 门户)</h2>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <span class="text-blue-500 mr-3 mt-1">📋</span>
+                                <div>
+                                    <h3 class="font-semibold">JD 智能解析</h3>
+                                    <p class="text-gray-600 text-sm">支持文本粘贴或文件上传，LLM自动提取关键要求。</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-500 mr-3 mt-1">🚀</span>
+                                <div>
+                                    <h3 class="font-semibold">“岗找人” - 智能推荐</h3>
+                                    <p class="text-gray-600 text-sm">上传 JD 后，系统**实时**从“人才向量数据库”中匹配候选人。</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-500 mr-3 mt-1">✨</span>
+                                <div>
+                                    <h3 class="font-semibold">[杀手锏] 可解释性精排</h3>
+                                    <p class="text-gray-600 text-sm bg-blue-50 p-3 rounded-md">"推荐 候选人A (96%)。<br><strong>理由：</strong>该候选人 8 年 Go 经验与您 5-10 年要求契合，且 K8s 项目经验与您职责高度相关。"</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <span class="text-blue-500 mr-3 mt-1">🔍</span>
+                                <div>
+                                    <h3 class="font-semibold">AI 人才库搜索</h3>
+                                    <p class="text-gray-600 text-sm">支持自然语言搜索（如：“找个懂K8s的Go后端”）和多维筛选。</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="tech-content" class="section-content hidden">
+                <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">
+                    本部分展示了支撑平台运行的核心技术理念、组件和服务。我们将通过一个（使用HTML/CSS构建的）架构图和一个清晰的数据流图，来解释系统如何实现异步、解耦和高效的匹配。
+                </p>
+
+                <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center">核心技术理念</h2>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <div class="text-center p-4">
+                            <span class="text-3xl">🔄</span>
+                            <h3 class="font-semibold mt-2">异步处理</h3>
+                            <p class="text-sm text-gray-600">简历/JD解析和向量化是计算密集型任务，必须异步处理。</p>
+                        </div>
+                        <div class="text-center p-4">
+                            <span class="text-3xl">🧩</span>
+                            <h3 class="font-semibold mt-2">服务解耦</h3>
+                            <p class="text-sm text-gray-600">将解析、匹配、存储等核心服务微服务化。</p>
+                        </div>
+                        <div class="text-center p-4">
+                            <span class="text-3xl">💰</span>
+                            <h3 class="font-semibold mt-2">LLM 成本控制</h3>
+                            <p class="text-sm text-gray-600">小模型解析，大模型精排，按价值分配算力。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">系统架构组件 (HTML 示意图)</h2>
+                    <div class="space-y-4">
+                        <div class="diagram-box text-center">
+                            <div class="diagram-title">前端 (Frontend)</div>
+                            <div class="flex flex-wrap justify-center gap-4">
+                                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm">CandidateApp (C端)</span>
+                                <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">RecruiterApp (B端)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center text-gray-400 text-2xl">⬇</div>
+
+                        <div class="diagram-box">
+                            <div class="diagram-title text-center">后端 (Backend) - 微服务架构</div>
+                            <div class="text-center bg-gray-100 p-2 rounded-md font-medium text-gray-700 mb-3">API 网关</div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                                <div class="diagram-box bg-gray-50"><div class="diagram-title">用户服务</div><p class="text-sm text-gray-600">B/C端用户、认证</p></div>
+                                <div class="diagram-box bg-red-50"><div class="diagram-title text-red-700">[核心] 解析服务</div><p class="text-sm text-gray-600">异步调用 LLM</p></div>
+                                <div class="diagram-box bg-red-50"><div class="diagram-title text-red-700">[核心] 匹配引擎</div><p class="text-sm text-gray-600">粗排+向量召回+LLM精排</p></div>
+                                <div class="diagram-box bg-red-50"><div class="diagram-title text-red-700">[核心] 异步任务</div><p class="text-sm text-gray-600">爬虫、向量化队列</p></div>
+                            </div>
+                        </div>
+
+                        <div class="text-center text-gray-400 text-2xl">⬇</div>
+
+                        <div class="diagram-box">
+                            <div class="diagram-title text-center">数据存储 (Data Layer)</div>
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+                                <div class="diagram-box bg-green-50"><div class="diagram-title text-green-700">主数据库 (SQL)</div><p class="text-sm text-gray-600">PostgreSQL (存JSON)</p></div>
+                                <div class="diagram-box bg-green-50"><div class="diagram-title text-green-700">[核心] 向量库</div><p class="text-sm text-gray-600">Milvus / pgvector</p></div>
+                                <div class="diagram-box bg-green-50"><div class="diagram-title text-green-700">消息队列</div><p class="text-sm text-gray-600">Redis / RabbitMQ</p></div>
+                                <div class="diagram-box bg-green-50"><div class="diagram-title text-green-700">缓存</div><p class="text-sm text-gray-600">Redis (存会话)</p></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">核心数据流 (B端“岗找人”)</h2>
+                    <ol class="relative border-l border-gray-200 space-y-4">
+                        <li class="ml-6">
+                            <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white">1</span>
+                            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                                <h3 class="font-semibold text-gray-900">HR 上传 JD</h3>
+                                <p class="text-sm text-gray-600">请求通过 API 网关，异步调用“解析服务”。</p>
+                            </div>
+                        </li>
+                        <li class="ml-6">
+                            <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white">2</span>
+                            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                                <h3 class="font-semibold">解析与存储</h3>
+                                <p class="text-sm text-gray-600">LLM 解析 JD，结构化 JSON 存入 SQL，语义向量存入 Vector DB。</p>
+                            </div>
+                        </li>
+                        <li class="ml-6">
+                            <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white">3</span>
+                            <h3 class="font-semibold text-gray-900 ml-4">粗排 (SQL)</h3>
+                            <p class="text-sm text-gray-600 ml-4">“匹配引擎”在 SQL 库中按地点、年限等硬性条件过滤。</p>
+                        </li>
+                        <li class="ml-6">
+                            <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white">4</span>
+                            <h3 class="font-semibold text-gray-900 ml-4">向量召回 (Vector DB)</h3>
+                            <p class="text-sm text-gray-600 ml-4">用“JD 向量”在 Vector DB 中召回 Top K 语义匹配的简历。</p>
+                        </li>
+                        <li class="ml-6">
+                            <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white">5</span>
+                            <div class="p-4 bg-indigo-50 border border-indigo-200 rounded-lg shadow-sm">
+                                <h3 class="font-semibold text-indigo-700">LLM 精排 (Re-rank)</h3>
+                                <p class="text-sm text-gray-600">将 JD 和 Top 20 简历打包发给 LLM，进行最终打分和“理由生成”。</p>
+                            </div>
+                        </li>
+                        <li class="ml-6">
+                            <span class="absolute flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full -left-3 ring-8 ring-white">6</span>
+                            <h3 class="font-semibold text-gray-900 ml-4">返回结果</h3>
+                            <p class="text-sm text-gray-600 ml-4">返回带“推荐理由”的精准列表给 HR。</p>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+
+            <div id="roadmap-content" class="section-content hidden">
+                <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">
+                    本部分将项目的实施计划可视化。我们将使用一个Gantt风格的图表来展示三个主要阶段的时间跨度，并列出每个阶段的核心目标和关键任务，清晰地呈现从冷启动到商业化的完整路径。
+                </p>
+                
+                <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">实施路线图 (Gantt 视图)</h2>
+                    <div class="w-full max-w-4xl mx-auto h-96 relative">
+                        <canvas id="roadmapChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">各阶段关键任务</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="border border-gray-200 p-4 rounded-lg bg-gray-50">
+                            <h3 class="font-semibold text-indigo-600">P1: 基础建设 & C 端冷启动</h3>
+                            <p class="text-sm text-gray-500 mb-2">(Months 0-4)</p>
+                            <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                <li>搭建核心技术栈 (LLM, SQL, Vector DB)</li>
+                                <li>开发 C 端门户 (上传简历)</li>
+                                <li>开发 JD 爬虫，聚合职位</li>
+                                <li>开发“人找岗”匹配引擎 v1</li>
+                                <li class="font-bold text-indigo-700">目标: 向量化简历 > 10,000</li>
+                            </ul>
+                        </div>
+                        <div class="border border-gray-200 p-4 rounded-lg bg-gray-50">
+                            <h3 class="font-semibold text-indigo-600">P2: B 端验证 & 飞轮启动</h3>
+                            <p class="text-sm text-gray-500 mb-2">(Months 5-9)</p>
+                            <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                <li>开发 B 端门户 (上传 JD)</li>
+                                <li>开发“岗找人”匹配引擎及 LLM 精排</li>
+                                <li>邀请 50+ 种子企业 HR 免费入驻</li>
+                                <li>迭代匹配算法</li>
+                                <li class="font-bold text-indigo-700">目标: 真实 HR 发布 JD > 1,000</li>
+                            </ul>
+                        </div>
+                        <div class="border border-gray-200 p-4 rounded-lg bg-gray-50">
+                            <h3 class="font-semibold text-indigo-600">P3: 商业化 & 规模化</h3>
+                            <p class="text-sm text-gray-500 mb-2">(Months 10-18)</p>
+                            <ul class="list-disc list-inside text-sm text-gray-600 space-y-1">
+                                <li>上线 B 端 SaaS 订阅和支付</li>
+                                <li>启动 B 端市场销售团队</li>
+                                <li>启动 C 端付费增值服务</li>
+                                <li>优化 LLM 成本和系统性能</li>
+                                <li class="font-bold text-indigo-700">目标: 付费 B 端客户 > 100</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('[data-tab]');
+            const contents = document.querySelectorAll('.section-content');
+            let roadmapChartInstance = null;
+
+            function showTab(tabName) {
+                contents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+                
+                tabs.forEach(tab => {
+                    if (tab.dataset.tab === tabName) {
+                        tab.classList.remove('tab-inactive');
+                        tab.classList.add('tab-active');
+                    } else {
+                        tab.classList.remove('tab-active');
+                        tab.classList.add('tab-inactive');
+                    }
+                });
+
+                const activeContent = document.getElementById(tabName + '-content');
+                if (activeContent) {
+                    activeContent.classList.remove('hidden');
+                }
+
+                if (tabName === 'roadmap' && !roadmapChartInstance) {
+                    renderRoadmapChart();
+                }
+            }
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    showTab(tab.dataset.tab);
+                });
+            });
+
+            function renderRoadmapChart() {
+                const ctx = document.getElementById('roadmapChart').getContext('2d');
+                if (ctx) {
+                    roadmapChartInstance = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: [
+                                'P1: 基础建设 & C 端冷启动', 
+                                'P2: B 端验证 & 飞轮启动', 
+                                'P3: 商业化 & 规模化'
+                            ],
+                            datasets: [{
+                                label: '实施周期 (月)',
+                                data: [
+                                    [0, 4], 
+                                    [5, 9], 
+                                    [10, 18]
+                                ],
+                                backgroundColor: [
+                                    'rgba(79, 70, 229, 0.7)',
+                                    'rgba(59, 130, 246, 0.7)',
+                                    'rgba(16, 185, 129, 0.7)'
+                                ],
+                                borderColor: [
+                                    'rgba(79, 70, 229, 1)',
+                                    'rgba(59, 130, 246, 1)',
+                                    'rgba(16, 185, 129, 1)'
+                                ],
+                                borderWidth: 1,
+                                barPercentage: 0.5,
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                x: {
+                                    min: 0,
+                                    max: 20,
+                                    title: {
+                                        display: true,
+                                        text: '项目月 (Months)'
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const val = context.raw;
+                                            return `周期: 第 ${val[0]} 月 - 第 ${val[1]} 月`;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+            
+            showTab('overview');
+        });
+    </script>
+</body>
+</html>
